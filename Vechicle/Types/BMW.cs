@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace async.Vechicle.Types
 {
-    internal class BMW : CAR, IFeaturesOfTheCar
+    public class BMW : CAR, IFeaturesOfTheCar
     {
         Engine engine;
         public string Name => name;
@@ -74,11 +74,9 @@ namespace async.Vechicle.Types
             {
                 base.currentSpeed = base.currentSpeed - 1;
             }
-            else
+            else 
             {
-
                 base.StopDriving();
-
             }
             return Task.CompletedTask;
         }
@@ -139,5 +137,7 @@ namespace async.Vechicle.Types
                 base.TogglePowerSwitch();
             }
         }
+
+        public Task Refuel(int amount) => base.Refuel(amount);
     }
 }

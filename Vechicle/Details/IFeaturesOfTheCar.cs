@@ -14,5 +14,8 @@ namespace async.Vechicle.Details
         Task LugicCheckCurrentSpeed();
         Task ReduceSpeed();
         Task IncreaseSpeed();
+        Task OpenFuelCap();
+        Task CloseFuelCap();
+        Task Refuel(int amount);
     }
 }

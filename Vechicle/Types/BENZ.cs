@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace async.Vechicle.Types
 {
-    public class BENZ : CAR , IFeaturesOfTheCar
+    public class BENZ : CAR, IFeaturesOfTheCar
     {
         Engine engine;
 
@@ -25,6 +25,9 @@ namespace async.Vechicle.Types
             base.StopTimer(); 
             return Task.CompletedTask;
         }
+        public Task OpenFuelCap() => base.OpenFuelCap();
+        public Task CloseFuelCap() => base.CloseFuelCap();
+        public Task Refuel(int amount) => base.Refuel(amount);
 
         public void OnLoop(object? sender, EventArgs e)
         {
@@ -52,19 +55,19 @@ namespace async.Vechicle.Types
             }
             if (0 < base.fuelLevel && base.fuelLevel < 3)
             {
-                Console.WriteLine("warninig:BENZ Fuel level is low ==> Fuel :" + base.fuelLevel);
-                Console.WriteLine("Please Stop engine");
+                LogStatus("warninig:BENZ Fuel level is low ==> Fuel :" + base.fuelLevel);
+                LogStatus("Please Stop engine");
             }
 
             else if (base.fuelLevel == 0)
             {
-                Console.WriteLine("warning:BENZ There is not foul in your car .....!");
+                LogStatus("warning:BENZ There is not foul in your car .....!");
                 engine.TurnOffEngine();
                 IsDriving = false;
             }
             else
             {
-                Console.WriteLine("BENZ Fuel level is ok ==> Fuel : " + base.fuelLevel);
+                LogStatus("BENZ Fuel level is ok ==> Fuel : " + base.fuelLevel);
             }
 
             return Task.CompletedTask;
@@ -78,34 +81,36 @@ namespace async.Vechicle.Types
             }
             else 
             {
-                
-                base.StopDriving();
-  
+                StopDriving();
             }
-                return Task.CompletedTask;
+            return Task.CompletedTask;
         }
         public override Task IncreaseSpeed()
         {
+            if (!IsDriving)
+            {
+                LogStatus("You must start driving before accelerating (gas).");
+                return Task.CompletedTask;
+            }
+
             base.IncreaseSpeed();
-            
             base.currentSpeed = base.currentSpeed + 1;
-            
             return Task.CompletedTask;
         }
         public Task LugicCheckCurrentSpeed()
         {
             if (IsDriving) {
 
-                Console.WriteLine("BENZ Current speed of your benz is :" + base.currentSpeed + "km/h");
+                LogStatus("BENZ Current speed of your benz is :" + base.currentSpeed + "km/h");
 
 
                 if (base.currentSpeed > 5)
                 {
-                    Console.WriteLine("warning:BENZ Your speed is high please slow down your speed");
+                    LogStatus("warning:BENZ Your speed is high please slow down your speed");
                 }
                 else if (base.currentSpeed > 10)
                 {
-                    Console.WriteLine("warning:BENZ Your speed is in the maximum of its value ");
+                    LogStatus("warning:BENZ Your speed is in the maximum of its value ");
                 }
                 
             }
@@ -120,20 +125,27 @@ namespace async.Vechicle.Types
         // call a super logic and child logic together
         public override void StartDriving()
         {
-            base.StartDriving();
-            Console.WriteLine("BENZ start driving");
+            if (engine.IsEngineRunning())
+            {
+                base.StartDriving();
+                LogStatus("BENZ start driving");
+            }
+            else
+            {
+                LogStatus("Please first toggle power switch and start engine .... ");
+            }
         }
         public override void StopDriving()
         {
             base.StopDriving();
-            Console.WriteLine("BENZ stop driving");
+            LogStatus("BENZ stop driving");
         }
 
         public override void TogglePowerSwitch()
         {
             if (base.IsDriving)
             {
-                Console.WriteLine("The BENZ cannot turn off the machine during the driving");
+                LogStatus("The BENZ cannot turn off the machine during the driving");
             }
             else
             {
