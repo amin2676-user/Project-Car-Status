@@ -23,6 +23,9 @@ namespace async.Vechicle.Types
             base.StopTimer();
             return Task.CompletedTask;
         }
+        public Task OpenFuelCap() => base.OpenFuelCap();
+        public Task CloseFuelCap() => base.CloseFuelCap();
+        public Task Refuel(int amount) => base.Refuel(amount);
 
         public void OnLoop(object? sender, EventArgs e)
         {
@@ -50,19 +53,19 @@ namespace async.Vechicle.Types
             }
             if (0 < base.fuelLevel && base.fuelLevel < 2)
             {
-                Console.WriteLine("warninig:BMW Fuel level is low ==> Fuel :" + base.fuelLevel);
-                Console.WriteLine("Please Stop engine");
+                LogStatus("warninig:BMW Fuel level is low ==> Fuel :" + base.fuelLevel);
+                LogStatus("Please Stop engine");
             }
 
             else if (base.fuelLevel == 0)
             {
-                Console.WriteLine("warning:BMW There is not foul in your car .....!");
+                LogStatus("warning:BMW There is not foul in your car .....!");
                 engine.TurnOffEngine();
                 IsDriving = false;
             }
             else
             {
-                Console.WriteLine("BMW Fuel level is ok ==> Fuel : " + base.fuelLevel);
+                LogStatus("BMW Fuel level is ok ==> Fuel : " + base.fuelLevel);
             }
 
             return Task.CompletedTask;
@@ -74,18 +77,22 @@ namespace async.Vechicle.Types
             {
                 base.currentSpeed = base.currentSpeed - 1;
             }
-            else 
+            else
             {
-                base.StopDriving();
+                StopDriving();
             }
             return Task.CompletedTask;
         }
         public override Task IncreaseSpeed()
         {
+            if (!IsDriving)
+            {
+                LogStatus("You must start driving before accelerating (gas).");
+                return Task.CompletedTask;
+            }
+
             base.IncreaseSpeed();
-
-            base.currentSpeed = base.currentSpeed + 2;
-
+            base.currentSpeed = base.currentSpeed + 1;
             return Task.CompletedTask;
         }
         public Task LugicCheckCurrentSpeed()
@@ -93,16 +100,16 @@ namespace async.Vechicle.Types
             if (IsDriving)
             {
 
-                Console.WriteLine("BMW Current speed of your bmw is :" + base.currentSpeed + "km/h");
+                LogStatus("BMW Current speed of your bmw is :" + base.currentSpeed + "km/h");
 
 
                 if (base.currentSpeed > 8)
                 {
-                    Console.WriteLine("warning:BMW Your speed is high please slow down your speed");
+                    LogStatus("warning:BMW Your speed is high please slow down your speed");
                 }
                 else if (base.currentSpeed > 10)
                 {
-                    Console.WriteLine("warning:BMW Your speed is in the maximum of its value ");
+                    LogStatus("warning:BMW Your speed is in the maximum of its value ");
                 }
 
             }
@@ -117,20 +124,27 @@ namespace async.Vechicle.Types
         // call a super logic and child logic together
         public override void StartDriving()
         {
-            base.StartDriving();
-            Console.WriteLine("BMW start driving");
+            if (engine.IsEngineRunning())
+            {
+                base.StartDriving();
+                LogStatus("BMW start driving");
+            }
+            else
+            {
+                LogStatus("Please first toggle power switch and start engine .... ");
+            }
         }
         public override void StopDriving()
         {
             base.StopDriving();
-            Console.WriteLine("BMW stop driving");
+            LogStatus("BMW stop driving");
         }
 
         public override void TogglePowerSwitch()
         {
             if (base.IsDriving)
             {
-                Console.WriteLine("The BMW cannot turn off the machine during the driving");
+                LogStatus("The BMW cannot turn off the machine during the driving");
             }
             else
             {
@@ -138,6 +152,5 @@ namespace async.Vechicle.Types
             }
         }
 
-        public Task Refuel(int amount) => base.Refuel(amount);
     }
 }

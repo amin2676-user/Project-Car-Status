@@ -137,7 +137,7 @@ public abstract class CAR
         else
         {
             fuelLevel += 5; // Example logic
-            Console.WriteLine($"Car refueled. Current fuel level: {fuelLevel}");
+            LogStatus($"Car refueled. Current fuel level: {fuelLevel}");
         }
         return Task.CompletedTask;
     }
@@ -159,7 +159,7 @@ public abstract class CAR
         }
         return Task.CompletedTask;
     }
-
+    //create a status.json in desktop in every system for car status 
     private static readonly string StatusFilePath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "status.json"
     );
@@ -180,7 +180,7 @@ public abstract class CAR
 
         lock (fileLock)
         {
-            List<object> logs;
+            List<object> logs; //object because object is for all data 
             if (File.Exists(StatusFilePath))
             {
                 var json = File.ReadAllText(StatusFilePath);
@@ -188,7 +188,7 @@ public abstract class CAR
             }
             else
             {
-                logs = new List<object>();
+                logs = new List<object>(); 
             }
             logs.Add(status);
             var newJson = JsonSerializer.Serialize(logs, new JsonSerializerOptions { WriteIndented = true });

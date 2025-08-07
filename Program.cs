@@ -11,7 +11,7 @@ namespace mainNameSpace
     {
         static void Main(string[] args)
         {
-            // Clear the status.json file on Desktop at program start
+            // Clear the status.json file on Desktop ....
             string statusFilePath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
                 "status.json"
@@ -28,7 +28,7 @@ namespace mainNameSpace
                     Console.WriteLine("\nAvailable features:");
                     //Console.WriteLine("1. Check Fuel");
                     //Console.WriteLine("2. Check Current Speed");
-                    Console.WriteLine("3. Gas (Accelerate)");
+                    Console.WriteLine("3. Gas (Accelerate)");     //به این نیازی نیست هنوز خوب طراحی نشده 
                     Console.WriteLine("4. Brake");
                     Console.WriteLine("5. Open Fuel Cap");
                     Console.WriteLine("6. Close Fuel Cap");
